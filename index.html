@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Escolar - Temporizador</title>
+    <style>
+        /* Estilos para el fondo y contenedor general */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Pantalla de inicio */
+        #inicio {
+            text-align: center;
+            cursor: pointer;
+            padding: 20px;
+            border: 2px solid #444;
+            background-color: #222;
+            border-radius: 8px;
+        }
+
+        /* Contenedor del jumpscare (oculto por defecto) */
+        #jumpscare-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            z-index: 9999;
+        }
+
+        /* Imagen del susto configurada para pantalla completa */
+        #jumpscare-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla inicial requerida para la interacción del usuario -->
+    <div id="inicio" onclick="iniciarPrograma()">
+        <h2>Haz clic aquí para iniciar el test de carga</h2>
+        <p>(Asegúrate de tener el volumen activo)</p>
+    </div>
+
+    <!-- Contenedor del susto -->
+    <div id="jumpscare-container">
+        <img id="jumpscare-img" src="" alt="Susto">
+    </div>
+
+    <!-- Elemento de audio oculto -->
+    <audio id="jumpscare-audio" src=""></audio>
+
+    <script>
+        // Bancos de recursos locales o URL públicas de prueba
+        const IMAGENES = [
+            "https://unsplash.com", // Ejemplo de imagen oscura
+            "https://unsplash.com"
+        ];
+
+        const AUDIOS = [
+            "https://google.com", // Audios públicos de Google Actions
+            "https://google.com"
+        ];
+
+        function iniciarPrograma() {
+            // 1. Ocultar el botón de inicio
+            document.getElementById('inicio').style.display = 'none';
+
+            // 2. Intentar poner la pantalla completa (Práctica de API Web)
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.log("Pantalla completa denegada"));
+            }
+
+            // 3. Calcular un tiempo aleatorio entre 3 y 8 segundos
+            const tiempoAleatorio = Math.floor(Math.random() * (8000 - 3000 + 1)) + 3000;
+            console.log(`El evento ocurrirá en: ${tiempoAleatorio / 1000} segundos.`);
+
+            // 4. Programar el desencadenador
+            setTimeout(ejecutarJumpscare, tiempoAleatorio);
+        }
+
+        function ejecutarJumpscare() {
+            // Seleccionar recursos aleatorios de los arreglos
+            const imgAleatoria = IMAGENES[Math.floor(Math.random() * IMAGENES.length)];
+            const audioAleatorio = AUDIOS[Math.floor(Math.random() * AUDIOS.length)];
+
+            // Asignar los recursos a los elementos HTML
+            const contenedor = document.getElementById('jumpscare-container');
+            const imgElemento = document.getElementById('jumpscare-img');
+            const audioElemento = document.getElementById('jumpscare-audio');
+
+            imgElemento.src = imgAleatoria;
+            audioElemento.src = audioAleatorio;
+
+            // Mostrar el contenedor y reproducir el audio
+            contenedor.style.display = 'block';
+            audioElemento.play().catch(err => console.log("Error al reproducir audio:", err));
+
+            // (Opcional) Quitar el susto después de 3 segundos
+            setTimeout(() => {
+                contenedor.style.display = 'none';
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                alert("Fin del programa de prueba.");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
